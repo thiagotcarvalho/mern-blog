@@ -70,14 +70,14 @@ const updateBlogPost = async (req, res) => {
     });
   } catch (e) {
     console.log(e);
-    return res.send(500).json({ message: 'Something went wrong while updating the blog post.' });
+    return res.status(500).json({ message: 'Something went wrong while updating the blog post.' });
   }
 
   if (!currentBlogPostToUpdate) {
     return res.status(500).json({ message: 'Unable to update the blog post.' });
   }
 
-  return res.send(200).json({ currentBlogPostToUpdate });
+  return res.status(200).json({ currentBlogPostToUpdate });
 };
 
 module.exports = { fetchListOfBlogPosts, deleteBlogPost, updateBlogPost, addNewBlogPost };

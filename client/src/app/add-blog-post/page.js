@@ -1,36 +1,67 @@
 'use client'
 
-import Header from "@/app/components/header/page";
-import { useFormStore } from '../context/page';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { useEffect } from "react";
+import {
+  useFormStore,
+  useBlogPostStore,
+  useEditBlogPostStore
+} from '../context/page';
+import Header from '@/app/components/header/page';
+import axios from 'axios';
 
 export default function AddNewBlogPost() {
   const router = useRouter();
+
   const formTitle = useFormStore((state) => state.title);
-  const formDescription = useFormStore((state) => state.description);
   const updateTitle = useFormStore((state) => state.updateTitle);
+  const formDescription = useFormStore((state) => state.description);
   const updateDescription = useFormStore((state) => state.updateDescription);
 
+  const currentBlogPost = useBlogPostStore((state) => state.currentBlogPost);
+  const updateCurrentBlogPost = useBlogPostStore((state) => state.updateCurrentBlogPost);
+
+  const isEdit = useEditBlogPostStore((state) => state.isEdit);
+  const updateIsEdit = useEditBlogPostStore((state) => state.updateIsEdit);
+
   async function handleSaveBlogPostToDatabase() {
-    const response = await axios.post('http://localhost:5001/api/blogs/add', {
-      title: formTitle,
-      description: formDescription
-    })
+    const response = isEdit
+      ? await axios.put(`http://localhost:5001/api/blog/update/${currentBlogPost._id}`, {
+        title: formTitle,
+        description: formDescription
+      })
+      : await axios.post('http://localhost:5001/api/blog/add', {
+        title: formTitle,
+        description: formDescription
+      })
     const result = await response.data;
 
     if (result) {
+      updateIsEdit(false);
       updateTitle('');
       updateDescription('');
+      updateCurrentBlogPost({});
       router.push('/');
     }
   }
+
+  useEffect(() => {
+    if (currentBlogPost._id) {
+      updateIsEdit(true);
+      updateTitle(currentBlogPost.title);
+      updateDescription(currentBlogPost.description);
+    } else {
+      updateIsEdit(false);
+    }
+  }, [currentBlogPost]);
 
   return (
     <div>
       <Header />
       <div className="p-7">
-        <h1 className="pb-5 text-xl font-semibold">Add New Blog Post</h1>
+        <h1 className="pb-5 text-xl font-semibold">
+          {isEdit ? 'Edit Blog Post' : 'Add New Blog Post'}
+        </h1>
         <div className="flex flex-col gap-2 w-96">
           <input
             className="border-solid border-2 rounded-sm"
@@ -53,7 +84,7 @@ export default function AddNewBlogPost() {
             className="p-2 rounded-md text-white bg-green-900 hover:bg-green-700"
             onClick={handleSaveBlogPostToDatabase}
           >
-            Add New Blog Post
+            {isEdit ? 'Edit Blog Post' : 'Add New Blog Post'}
           </button>
         </div>
       </div>

@@ -8,8 +8,15 @@ export const useFormStore = create((set) => ({
 }));
 
 export const useBlogPostStore = create((set) => ({
+  currentBlogPost: {},
   blogPostList: [],
   pending: false,
+  updateCurrentBlogPost: (newPost) => set({ currentBlogPost: newPost }),
   updateBlogPostList: (newList) => set({ blogPostList: newList }),
-  updatePending: () => set(() => true ? false : false)
+  updatePending: (newState) => set({ pending: newState }),
 }));
+
+export const useEditBlogPostStore = create((set) => ({
+  isEdit: false,
+  updateIsEdit: (newState) => set({ isEdit: newState }),
+}))
