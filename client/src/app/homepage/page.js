@@ -69,25 +69,28 @@ export default function BlogHome() {
       {pending ? (
         <h1>Loading Blog Posts!</h1>
       ) : (
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-3 gap-3">
           {blogPostList && blogPostList.length ?
             blogPostList.map(post => (
               <div
                 key={post._id}
                 className="p-3 border-solid border-2 border-stone-500"
               >
-                <p>{post.title}</p>
-                <p>{post.description}</p>
-                <FaEdit
-                  size={30}
-                  className="cursor-pointer"
-                  onClick={() => handleEditBlogPost(post)}
-                />
-                <FaTrash
-                  size={30}
-                  className="cursor-pointer"
-                  onClick={() => handleDeleteBlogPost(post._id)}
-                />
+                <p className="mb-3">{post.title}</p>
+                <hr />
+                <p className="mt-4">{post.description}</p>
+                <div className='flex justify-end gap-5 mt-5'>
+                  <FaEdit
+                    size={15}
+                    className="cursor-pointer"
+                    onClick={() => handleEditBlogPost(post)}
+                  />
+                  <FaTrash
+                    size={15}
+                    className="cursor-pointer"
+                    onClick={() => handleDeleteBlogPost(post._id)}
+                  />
+                </div>
               </div>
             )) : <h1>There are no blog posts to display.</h1>}
         </div>
