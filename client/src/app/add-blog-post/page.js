@@ -24,13 +24,16 @@ export default function AddNewBlogPost() {
   const isEdit = useEditBlogPostStore((state) => state.isEdit);
   const updateIsEdit = useEditBlogPostStore((state) => state.updateIsEdit);
 
+  const apiUrl = 'https://mern-blog-9fbb.onrender.com/api/blog'
+  const apiUrlDev = 'http://localhost:5001/api/blog'
+
   async function handleSaveBlogPostToDatabase() {
     const response = isEdit
-      ? await axios.put(`http://localhost:5001/api/blog/update/${currentBlogPost._id}`, {
+      ? await axios.put(`${apiUrl}/update/${currentBlogPost._id}`, {
         title: formTitle,
         description: formDescription
       })
-      : await axios.post('http://localhost:5001/api/blog/add', {
+      : await axios.post(`${apiUrl}/add`, {
         title: formTitle,
         description: formDescription
       })

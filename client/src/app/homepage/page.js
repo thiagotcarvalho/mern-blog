@@ -26,6 +26,9 @@ export default function BlogHome() {
   const isEdit = useEditBlogPostStore((state) => state.isEdit);
   const updateIsEdit = useEditBlogPostStore((state) => state.updateIsEdit);
 
+  const apiUrl = 'https://mern-blog-9fbb.onrender.com/api/blog'
+  const apiUrlDev = 'http://localhost:5001/api/blog'
+
   async function fetchListOfBlogPosts() {
     updatePending(true);
     updateTitle('');
@@ -33,7 +36,7 @@ export default function BlogHome() {
     updateCurrentBlogPost({});
     updateIsEdit(false);
 
-    const response = await axios.get('http://localhost:5001/api/blog/posts');
+    const response = await axios.get(`${apiUrl}/posts`);
     const result = await response.data;
 
     if (result && result.blogList && result.blogList.length) {
@@ -46,7 +49,7 @@ export default function BlogHome() {
   }
 
   async function handleDeleteBlogPost(postId) {
-    const response = await axios.delete(`http://localhost:5001/api/blog/delete/${postId}`);
+    const response = await axios.delete(`${apiUrl}/${postId}`);
     const result = await response.data;
 
     if (result?.message) {
@@ -67,7 +70,7 @@ export default function BlogHome() {
     <div className="p-7">
       <h1 className="pb-5 text-xl font-semibold">All Blog Posts</h1>
       {pending ? (
-        <h1>Loading Blog Posts!</h1>
+        <h1>Loading Blog Posts...</h1>
       ) : (
         <div className="grid grid-cols-3 gap-3">
           {blogPostList && blogPostList.length ?
