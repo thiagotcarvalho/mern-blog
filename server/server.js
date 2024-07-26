@@ -6,21 +6,21 @@ const blogRouter = require('./routes/blog-routes');
 
 const app = express();
 const port = process.env.PORT || 5001;
-const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
-server.keepAliveTimeout = 120 * 1000;
-server.headersTimeout = 120 * 1000;
-
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
-app.get('/', (req, res) => res.type('html').send(html));
+app.use('/api/blog', blogRouter);
 
 app.use('/api', (req, res) => {
   res.send('Hello, world!');
 })
 
-app.use('/api/blog', blogRouter);
+app.get('/', (req, res) => res.type('html').send(html));
+
+const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+server.keepAliveTimeout = 120 * 1000;
+server.headersTimeout = 120 * 1000;
 
 const html = `
 <!DOCTYPE html>
